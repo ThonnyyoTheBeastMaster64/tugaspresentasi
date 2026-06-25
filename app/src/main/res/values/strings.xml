@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">tugaspresentasi</string>
+    <string name="app_name">Tugas Presentasi</string>
+    <string name="status_playing">Status: Playing&#8230;</string>
+    <string name="status_paused">Status: Paused</string>
+    <string name="status_stopped">Status: Stopped</string>
+    <string name="title_music_player">Simple Music Player</string>
+    <string name="btn_play">PLAY</string>
+    <string name="btn_pause">PAUSE</string>
+    <string name="btn_stop">STOP</string>
+    <string name="lyrics_placeholder">Lyrics will appear here&#8230;</string>
+    <string name="btn_sync_youtube">Sync Lyrics via YouTube</string>
+    <string name="title_sync_lyrics">Create lyrics from YouTube?</string>
+    <string name="hint_youtube_link">Paste YouTube Link Here</string>
+    <string name="btn_start_sync">Start Syncing</string>
+    <string name="status_sync_done">Syncing with YouTube&#8230; Done!</string>
+    <string name="error_invalid_link">Please enter a valid YouTube link</string>
+    <string name="msg_simulated">Lyrics synced (Simulated)</string>
 </resources>

@@ -1,56 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#F5F5F5">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Simple Music Player"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#333333"
-        android:layout_marginBottom="8dp"/>
+    <!-- Background Video (Canvas) -->
+    <VideoView
+        android:id="@+id/videoBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 
-    <TextView
-        android:id="@+id/textStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status: Stopped"
-        android:textSize="16sp"
-        android:textColor="#666666"
-        android:layout_marginBottom="32dp"/>
+    <!-- Overlay semi-transparan agar teks terbaca -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
 
-        <Button
-            android:id="@+id/btnPlay"
+        <TextView
+            android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PLAY"
-            android:layout_marginEnd="16dp"/>
+            android:text="@string/title_music_player"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp"/>
 
-        <Button
-            android:id="@+id/btnPause"
+        <TextView
+            android:id="@+id/textStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PAUSE"
-            android:layout_marginEnd="16dp"/>
+            android:text="@string/status_stopped"
+            android:textSize="16sp"
+            android:textColor="#CCCCCC"
+            android:layout_marginBottom="32dp"/>
 
-        <Button
-            android:id="@+id/btnStop"
+        <!-- Lyrics Display Placeholder -->
+        <TextView
+            android:id="@+id/textLyrics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lyrics will appear here..."
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:textSize="18sp"
+            android:fontStyle="italic"/>
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STOP"/>
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnPlay"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_play"
+                android:textColor="#FFFFFF"/>
+
+            <Button
+                android:id="@+id/btnPause"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_pause"
+                android:textColor="#FFFFFF"/>
+
+            <Button
+                android:id="@+id/btnStop"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_stop"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGoToLyrics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sync Lyrics via YouTube"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#FF0000"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

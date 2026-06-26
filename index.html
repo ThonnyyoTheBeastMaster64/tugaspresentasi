@@ -10,6 +10,7 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #F8FAFC;
+            scroll-behavior: smooth;
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.8);
@@ -17,119 +18,221 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         .bg-hero {
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1506929197414-436473f31b9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
         }
         .destination-card:hover img {
             transform: scale(1.1);
         }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 10px; }
     </style>
 </head>
 <body class="text-slate-800">
 
     <!-- Hero Section -->
-    <header class="bg-hero h-[60vh] flex flex-col items-center justify-center text-center text-white px-6">
-        <h1 class="text-5xl md:text-6xl font-bold mb-4">Discover Your Next Escape</h1>
-        <p class="text-lg md:text-xl text-slate-200 max-w-2xl">Book exclusive vacation packages to Indonesia's most breathtaking destinations.</p>
+    <header class="bg-hero h-[70vh] flex flex-col items-center justify-center text-center text-white px-6">
+        <div class="animate-fade-in-up">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">Your Journey Starts Here</h1>
+            <p class="text-lg md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed">Experience the world's most exotic destinations with our curated premium travel packages.</p>
+        </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 -mt-20 relative z-10 pb-20">
+    <main class="max-w-7xl mx-auto px-6 -mt-24 relative z-10 pb-20">
 
         <!-- Booking Form Card -->
-        <section class="glass-card p-8 rounded-3xl shadow-2xl mb-16">
-            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Book Your Trip
+        <section class="glass-card p-10 rounded-[2.5rem] shadow-2xl mb-16">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <div class="p-2 bg-sky-100 rounded-lg">
+                    <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                Reserve Your Adventure
             </h2>
-            <form id="booking-form" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <form id="booking-form" class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-600">Full Name</label>
-                    <input type="text" id="name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Explorer Name</label>
+                    <input type="text" id="name" required placeholder="Full Name" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-600">Destination</label>
-                    <select id="destination" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Destination</label>
+                    <select id="destination" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50 cursor-pointer">
                         <option value="Bali">Bali, Indonesia</option>
                         <option value="Raja Ampat">Raja Ampat, Papua</option>
                         <option value="Labuan Bajo">Labuan Bajo, NTT</option>
-                        <option value="Borobudur">Borobudur, Magelang</option>
+                        <option value="Mount Bromo">Mount Bromo, East Java</option>
                     </select>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-sm font-semibold text-slate-600">Departure Date</label>
-                    <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Travel Date</label>
+                    <input type="date" id="date" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50">
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg">
+                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 px-6 rounded-2xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-sky-200">
                         Confirm Booking
                     </button>
                 </div>
             </form>
         </section>
 
-        <!-- Destinasi Populer -->
-        <section class="mb-16">
-            <h3 class="text-3xl font-bold mb-8">Popular Destinations</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Bali -->
-                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bali" class="w-full h-full object-cover transition-transform duration-500">
-                    </div>
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold mb-2">Bali, The Island of Gods</h4>
-                        <p class="text-slate-500 text-sm mb-4">Explore beautiful beaches, lush rice terraces, and vibrant culture.</p>
-                        <span class="text-sky-600 font-bold">$499 / Person</span>
-                    </div>
+        <!-- Destinasi Section -->
+        <section class="mb-20">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h3 class="text-4xl font-bold mb-2">Popular Destinations</h3>
+                    <p class="text-slate-500">Hand-picked locations for your ultimate relaxation.</p>
                 </div>
-                <!-- Raja Ampat -->
-                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Raja Ampat" class="w-full h-full object-cover transition-transform duration-500">
-                    </div>
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold mb-2">Raja Ampat, Papua</h4>
-                        <p class="text-slate-500 text-sm mb-4">A paradise for divers with the world's richest marine biodiversity.</p>
-                        <span class="text-sky-600 font-bold">$899 / Person</span>
-                    </div>
-                </div>
-                <!-- Labuan Bajo -->
-                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Labuan Bajo" class="w-full h-full object-cover transition-transform duration-500">
-                    </div>
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold mb-2">Labuan Bajo, NTT</h4>
-                        <p class="text-slate-500 text-sm mb-4">Gate to the Komodo National Park and majestic island views.</p>
-                        <span class="text-sky-600 font-bold">$650 / Person</span>
-                    </div>
-                </div>
+            </div>
+
+            <div id="destinations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Destinasi akan di-generate oleh JS -->
             </div>
         </section>
 
         <!-- My Bookings Section -->
-        <section id="bookings-section" class="hidden">
-            <h3 class="text-3xl font-bold mb-8">My Bookings</h3>
-            <div id="bookings-list" class="space-y-4">
+        <section id="bookings-section" class="hidden animate-fade-in">
+            <h3 class="text-3xl font-bold mb-8">My Itinerary</h3>
+            <div id="bookings-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Bookings will be injected here -->
             </div>
         </section>
 
     </main>
 
+    <!-- Destination Detail Modal -->
+    <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10">
+        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+        <div class="glass-card w-full max-w-5xl max-h-[90vh] rounded-[3rem] overflow-hidden relative flex flex-col md:flex-row shadow-2xl animate-zoom-in">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 bg-white/20 hover:bg-white/40 p-3 rounded-full text-white backdrop-blur-md transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- Modal Left: Big Image -->
+            <div class="flex-1 h-64 md:h-auto overflow-hidden">
+                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Modal Right: Info -->
+            <div class="flex-1 p-10 md:p-16 overflow-y-auto bg-white/90 backdrop-blur-md">
+                <h4 id="modal-title" class="text-4xl font-bold mb-4">Destination Title</h4>
+                <div class="flex items-center gap-2 mb-6">
+                    <span id="modal-tag" class="bg-sky-100 text-sky-700 px-4 py-1 rounded-full text-sm font-bold">Nature</span>
+                    <span id="modal-price" class="text-slate-400 font-bold">$0 / Person</span>
+                </div>
+                <p id="modal-desc" class="text-slate-600 leading-relaxed text-lg mb-8">Description goes here...</p>
+
+                <div class="space-y-6">
+                    <h5 class="font-bold text-xl">What's Included:</h5>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3 text-slate-600">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Luxury Resort Accommodation
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-600">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Private Guided Tour
+                        </li>
+                    </ul>
+                    <button onclick="closeModal(); document.getElementById('name').focus();" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">
+                        Book This Destination
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const destinations = [
+            {
+                id: 1,
+                name: "Bali, Indonesia",
+                tag: "Cultural Paradise",
+                price: 499,
+                img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                desc: "Known as the Island of the Gods, Bali offers a rich cultural heritage, vibrant ceremonies, and stunning natural beauty. From lush jungles in Ubud to world-class surfing in Uluwatu, it's a destination that caters to every type of traveler."
+            },
+            {
+                id: 2,
+                name: "Raja Ampat, Papua",
+                tag: "Underwater Eden",
+                price: 899,
+                img: "https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                desc: "Raja Ampat is a pristine archipelago in West Papua, famous for being the global epicentre of marine biodiversity. Crystal-clear waters, limestone karsts, and secret lagoons await those looking for the ultimate off-the-grid experience."
+            },
+            {
+                id: 3,
+                name: "Labuan Bajo, NTT",
+                tag: "Prehistoric Adventure",
+                price: 650,
+                img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                desc: "Home to the legendary Komodo Dragon, Labuan Bajo is the gateway to the Komodo National Park. Hike up Padar Island for an iconic three-colored beach view or swim with Manta Rays in Manta Point."
+            },
+            {
+                id: 4,
+                name: "Mount Bromo, East Java",
+                tag: "Volcanic Wonder",
+                price: 320,
+                img: "https://images.unsplash.com/photo-1602154663343-89fe0496150b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                desc: "Witness one of the most spectacular sunrises in the world over the Bromo-Tengger-Semeru National Park. The surreal landscapes of the Sea of Sand and the active crater of Mount Bromo will leave you breathless."
+            }
+        ];
+
         const bookingForm = document.getElementById('booking-form');
         const bookingsSection = document.getElementById('bookings-section');
         const bookingsList = document.getElementById('bookings-list');
+        const destinationsGrid = document.getElementById('destinations-grid');
 
-        // Load existing bookings from LocalStorage
+        // Render Destinations
+        destinationsGrid.innerHTML = destinations.map(d => `
+            <div class="destination-card group bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openDetail(${d.id})">
+                <div class="h-72 overflow-hidden relative">
+                    <img src="${d.img}" alt="${d.name}" class="w-full h-full object-cover transition-transform duration-700">
+                    <div class="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-1 rounded-full text-sm font-bold shadow-sm">
+                        $${d.price}
+                    </div>
+                </div>
+                <div class="p-8">
+                    <div class="text-sky-600 text-xs font-bold uppercase tracking-widest mb-2">${d.tag}</div>
+                    <h4 class="text-2xl font-bold mb-3">${d.name}</h4>
+                    <p class="text-slate-500 text-sm mb-6 line-clamp-2">${d.desc}</p>
+                    <div class="flex items-center text-slate-900 font-bold group-hover:gap-2 transition-all">
+                        View Details
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Modal Logic
+        function openDetail(id) {
+            const dest = destinations.find(d => d.id === id);
+            document.getElementById('modal-title').innerText = dest.name;
+            document.getElementById('modal-tag').innerText = dest.tag;
+            document.getElementById('modal-price').innerText = `$${dest.price} / Person`;
+            document.getElementById('modal-desc').innerText = dest.desc;
+            document.getElementById('modal-img').src = dest.img;
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Booking Logic
         let bookings = JSON.parse(localStorage.getItem('wanderlust_bookings')) || [];
         updateBookingsUI();
 
         bookingForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const newBooking = {
                 id: Date.now(),
                 name: document.getElementById('name').value,
@@ -137,14 +240,10 @@
                 date: document.getElementById('date').value,
                 status: 'Confirmed'
             };
-
             bookings.unshift(newBooking);
             localStorage.setItem('wanderlust_bookings', JSON.stringify(bookings));
-
             bookingForm.reset();
             updateBookingsUI();
-
-            // Smooth scroll to list
             bookingsSection.scrollIntoView({ behavior: 'smooth' });
         });
 
@@ -152,14 +251,17 @@
             if (bookings.length > 0) {
                 bookingsSection.classList.remove('hidden');
                 bookingsList.innerHTML = bookings.map(b => `
-                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-sky-600 flex justify-between items-center transition-all hover:shadow-lg">
+                    <div class="bg-white p-8 rounded-[2rem] shadow-lg border-l-8 border-sky-600 flex justify-between items-center transition-all hover:-translate-y-1">
                         <div>
-                            <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">${b.status}</p>
-                            <h5 class="text-xl font-bold">${b.destination}</h5>
-                            <p class="text-slate-500 text-sm">Guest: ${b.name} • Date: ${b.date}</p>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">${b.status}</p>
+                            </div>
+                            <h5 class="text-2xl font-bold mb-1">${b.destination}</h5>
+                            <p class="text-slate-500 font-medium">Guest: <span class="text-slate-900">${b.name}</span> • <span class="text-sky-600">${b.date}</span></p>
                         </div>
-                        <button onclick="deleteBooking(${b.id})" class="text-red-400 hover:text-red-600 p-2">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        <button onclick="deleteBooking(${b.id})" class="text-slate-300 hover:text-red-500 transition-colors p-3">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     </div>
                 `).join('');

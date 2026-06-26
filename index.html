@@ -3,425 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeSync - Interactive Music Player</title>
+    <title>Wanderlust - Premium Vacation Booking</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #C44CFF;
-            --accent-warm: #FF6B6B;
-            --bg-dark: #0B0B14;
-            --card-bg: rgba(21, 19, 31, 0.7);
-        }
-
         body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8FAFC;
         }
-
-        .font-display { font-family: 'Space+Grotesk', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-
-        /* Glassmorphism */
-        .glass {
-            background: var(--card-bg);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-
-        /* Parallax Background */
-        #bg-container {
-            position: fixed;
-            top: -5%;
-            left: -5%;
-            width: 110%;
-            height: 110%;
-            z-index: -1;
-            transition: transform 0.1s ease-out;
-            pointer-events: none;
+        .bg-hero {
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1506929197414-436473f31b9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
         }
-
-        #youtube-bg {
-            width: 100%;
-            height: 100%;
-            filter: blur(40px) brightness(0.4);
+        .destination-card:hover img {
             transform: scale(1.1);
-        }
-
-        /* Lyrics Sync Styles */
-        .lyric-line {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0.3;
-            transform: scale(0.95);
-            filter: blur(1px);
-        }
-
-        .lyric-line.active {
-            opacity: 1;
-            transform: scale(1.1);
-            filter: blur(0);
-            background: linear-gradient(90deg, var(--accent-warm), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-            text-shadow: 0 0 20px rgba(196, 76, 255, 0.3);
-        }
-
-        /* Hide YouTube controls but allow interaction for API */
-        .yt-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-        }
-
-        /* Custom Scrollbar */
-        #lyrics-container::-webkit-scrollbar {
-            width: 0px;
-        }
-
-        .glow-button {
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .glow-button:hover {
-            box-shadow: 0 0 20px rgba(196, 76, 255, 0.4);
-            transform: translateY(-2px);
         }
     </style>
 </head>
-<body>
+<body class="text-slate-800">
 
-    <!-- Parallax Background Container -->
-    <div id="bg-container">
-        <div id="youtube-bg"></div>
-    </div>
+    <!-- Hero Section -->
+    <header class="bg-hero h-[60vh] flex flex-col items-center justify-center text-center text-white px-6">
+        <h1 class="text-5xl md:text-6xl font-bold mb-4">Discover Your Next Escape</h1>
+        <p class="text-lg md:text-xl text-slate-200 max-w-2xl">Book exclusive vacation packages to Indonesia's most breathtaking destinations.</p>
+    </header>
 
-    <!-- Main UI -->
-    <main class="relative z-20 h-screen flex flex-col items-center justify-center p-6">
+    <main class="max-w-7xl mx-auto px-6 -mt-20 relative z-10 pb-20">
 
-        <!-- Search & Setup Panel -->
-        <div id="setup-panel" class="glass p-8 rounded-3xl w-full max-w-2xl text-center transition-all duration-500">
-            <h1 class="font-display text-4xl mb-2 bg-gradient-to-r from-[#FF6B6B] to-[#C44CFF] bg-clip-text text-transparent">VibeSync</h1>
-            <p class="text-gray-400 mb-8">Paste a YouTube link & lyrics to start the vibe.</p>
-
-            <div class="space-y-4">
-                <input type="text" id="yt-link" placeholder="YouTube Video URL (e.g., youtube.com/watch?v=...)"
-                    class="w-full bg-black/30 border border-white/10 rounded-xl px-5 py-4 focus:outline-none focus:border-[#C44CFF] transition-all">
-
-                <textarea id="lrc-input" placeholder="Paste LRC lyrics here (or just text lines)..."
-                    class="w-full h-40 bg-black/30 border border-white/10 rounded-xl px-5 py-4 focus:outline-none focus:border-[#C44CFF] transition-all font-mono text-sm"></textarea>
-
-                <div class="flex gap-4">
-                    <button onclick="autoSyncLyrics()" id="auto-sync-btn" class="flex-1 border border-[#C44CFF] text-[#C44CFF] hover:bg-[#C44CFF]/10 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                        AUTO FETCH
+        <!-- Booking Form Card -->
+        <section class="glass-card p-8 rounded-3xl shadow-2xl mb-16">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Book Your Trip
+            </h2>
+            <form id="booking-form" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-600">Full Name</label>
+                    <input type="text" id="name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-600">Destination</label>
+                    <select id="destination" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                        <option value="Bali">Bali, Indonesia</option>
+                        <option value="Raja Ampat">Raja Ampat, Papua</option>
+                        <option value="Labuan Bajo">Labuan Bajo, NTT</option>
+                        <option value="Borobudur">Borobudur, Magelang</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-600">Departure Date</label>
+                    <input type="date" id="date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg">
+                        Confirm Booking
                     </button>
-                    <button onclick="startExperience()" class="glow-button flex-[2] bg-gradient-to-r from-[#FF6B6B] to-[#C44CFF] text-white font-bold py-4 rounded-xl shadow-lg">
-                        LAUNCH PLAYER
-                    </button>
                 </div>
-            </div>
-        </div>
+            </form>
+        </section>
 
-        <!-- Player Panel (Hidden by default) -->
-        <div id="player-panel" class="hidden glass p-10 rounded-[3rem] w-full max-w-4xl h-[80vh] flex flex-col md:flex-row gap-10">
-
-            <!-- Left: Info & Controls -->
-            <div class="flex-1 flex flex-col justify-between">
-                <div>
-                    <span class="font-mono text-xs text-[#C44CFF] uppercase tracking-widest">Now Vibe-ing</span>
-                    <h2 id="track-title" class="font-display text-3xl mt-2 mb-4 leading-tight">Waiting for music...</h2>
-                    <div class="flex items-center gap-4 mb-8">
-                        <div id="thumbnail" class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 overflow-hidden shadow-2xl">
-                            <img src="" alt="" class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <p id="track-channel" class="text-gray-400 text-sm">Artist / Channel</p>
-                            <p id="playback-time" class="font-mono text-xs text-white/50 mt-1">00:00 / 00:00</p>
-                        </div>
+        <!-- Destinasi Populer -->
+        <section class="mb-16">
+            <h3 class="text-3xl font-bold mb-8">Popular Destinations</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Bali -->
+                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bali" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">Bali, The Island of Gods</h4>
+                        <p class="text-slate-500 text-sm mb-4">Explore beautiful beaches, lush rice terraces, and vibrant culture.</p>
+                        <span class="text-sky-600 font-bold">$499 / Person</span>
                     </div>
                 </div>
-
-                <div class="space-y-6">
-                    <!-- Progress Bar -->
-                    <div class="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden cursor-pointer" onclick="seek(event)">
-                        <div id="progress-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-[#FF6B6B] to-[#C44CFF] w-0 transition-all duration-300"></div>
+                <!-- Raja Ampat -->
+                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Raja Ampat" class="w-full h-full object-cover transition-transform duration-500">
                     </div>
-
-                    <!-- Controls -->
-                    <div class="flex items-center justify-center gap-8">
-                        <button onclick="togglePlay()" id="play-btn" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform shadow-xl">
-                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </button>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">Raja Ampat, Papua</h4>
+                        <p class="text-slate-500 text-sm mb-4">A paradise for divers with the world's richest marine biodiversity.</p>
+                        <span class="text-sky-600 font-bold">$899 / Person</span>
+                    </div>
+                </div>
+                <!-- Labuan Bajo -->
+                <div class="destination-card group bg-white rounded-3xl overflow-hidden shadow-lg transition-all cursor-pointer">
+                    <div class="h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Labuan Bajo" class="w-full h-full object-cover transition-transform duration-500">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold mb-2">Labuan Bajo, NTT</h4>
+                        <p class="text-slate-500 text-sm mb-4">Gate to the Komodo National Park and majestic island views.</p>
+                        <span class="text-sky-600 font-bold">$650 / Person</span>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Right: Lyrics Panel -->
-            <div class="flex-1 h-full overflow-hidden relative">
-                <div id="lyrics-container" class="h-full overflow-y-auto py-[40%] space-y-8 text-2xl font-bold scroll-smooth">
-                    <!-- Lyrics will be injected here -->
-                </div>
-                <!-- Fade overlays -->
-                <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-[#15131F]/80 to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#15131F]/80 to-transparent pointer-events-none"></div>
+        <!-- My Bookings Section -->
+        <section id="bookings-section" class="hidden">
+            <h3 class="text-3xl font-bold mb-8">My Bookings</h3>
+            <div id="bookings-list" class="space-y-4">
+                <!-- Bookings will be injected here -->
             </div>
-        </div>
+        </section>
 
     </main>
 
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player;
-        let lyrics = [];
-        let currentLyricIndex = -1;
-        let timer;
+        const bookingForm = document.getElementById('booking-form');
+        const bookingsSection = document.getElementById('bookings-section');
+        const bookingsList = document.getElementById('bookings-list');
 
-        // Parallax Effect
-        document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) / 50;
-            const moveY = (e.clientY - window.innerHeight / 2) / 50;
-            document.getElementById('bg-container').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        // Load existing bookings from LocalStorage
+        let bookings = JSON.parse(localStorage.getItem('wanderlust_bookings')) || [];
+        updateBookingsUI();
+
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newBooking = {
+                id: Date.now(),
+                name: document.getElementById('name').value,
+                destination: document.getElementById('destination').value,
+                date: document.getElementById('date').value,
+                status: 'Confirmed'
+            };
+
+            bookings.unshift(newBooking);
+            localStorage.setItem('wanderlust_bookings', JSON.stringify(bookings));
+
+            bookingForm.reset();
+            updateBookingsUI();
+
+            // Smooth scroll to list
+            bookingsSection.scrollIntoView({ behavior: 'smooth' });
         });
 
-        function extractVideoID(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        async function autoSyncLyrics() {
-            const url = document.getElementById('yt-link').value;
-            const videoID = extractVideoID(url);
-            const btn = document.getElementById('auto-sync-btn');
-
-            if (!videoID) {
-                alert('Please enter a YouTube link first!');
-                return;
-            }
-
-            btn.innerHTML = '<span>FETCHING...</span>';
-            btn.disabled = true;
-
-            // Start player immediately with placeholder lyrics if user is bored
-            const lrcInput = document.getElementById('lrc-input');
-            if (lrcInput.value === "") {
-                lrcInput.value = "[00:00.00] Fetching lyrics... Please wait while vibing.";
-            }
-
-            try {
-                // Using a FASTER proxy: corsproxy.io is usually faster than allorigins
-                const proxy = 'https://corsproxy.io/?';
-                const targetUrl = `https://www.youtube.com/watch?v=${videoID}`;
-
-                const response = await fetch(proxy + encodeURIComponent(targetUrl));
-                const html = await response.text();
-
-                // Optimized Regex
-                const regex = /ytInitialPlayerResponse\s*=\s*({.+?})\s*;/;
-                const match = html.match(regex);
-
-                if (!match) throw new Error("No metadata found.");
-
-                const playerResponse = JSON.parse(match[1]);
-                const captionTracks = playerResponse.captions?.playerCaptionsTracklistRenderer?.captionTracks;
-
-                if (!captionTracks || captionTracks.length === 0) {
-                    throw new Error("No captions available.");
-                }
-
-                const track = captionTracks.find(t => !t.kind) || captionTracks[0];
-                const transcriptUrl = track.baseUrl + '&fmt=json3';
-
-                const tResponse = await fetch(proxy + encodeURIComponent(transcriptUrl));
-                const tJson = await tResponse.json();
-
-                let lrcString = "";
-                tJson.events.forEach(event => {
-                    if (event.segs) {
-                        const timeMs = event.tStartMs;
-                        const minutes = Math.floor(timeMs / 60000);
-                        const seconds = ((timeMs % 60000) / 1000).toFixed(2);
-                        const timeStr = `[${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}]`;
-                        const text = event.segs.map(s => s.utf8).join('').trim();
-                        if (text && text !== '\n') lrcString += `${timeStr} ${text}\n`;
-                    }
-                });
-
-                lrcInput.value = lrcString;
-                btn.innerHTML = '<span>DONE!</span>';
-
-                // If already in player mode, refresh lyrics live!
-                if (!document.getElementById('player-panel').classList.contains('hidden')) {
-                    lyrics = parseLRC(lrcString);
-                    renderLyrics();
-                }
-
-                setTimeout(() => {
-                    btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> AUTO FETCH';
-                    btn.disabled = false;
-                }, 2000);
-
-            } catch (err) {
-                console.error(err);
-                btn.innerHTML = '<span>FAILED</span>';
-                btn.disabled = false;
-            }
-        }
-
-        function parseLRC(lrcText) {
-            const lines = lrcText.split('\n');
-            const result = [];
-            const timeRegExp = /\[(\d+):(\d+\.\d+)\]/;
-
-            lines.forEach(line => {
-                const match = timeRegExp.exec(line);
-                if (match) {
-                    const minutes = parseInt(match[1]);
-                    const seconds = parseFloat(match[2]);
-                    const time = minutes * 60 + seconds;
-                    const text = line.replace(timeRegExp, '').trim();
-                    if (text) result.push({ time, text });
-                } else if (line.trim()) {
-                    // Fallback for non-LRC: space out lines every 3 seconds
-                    result.push({ time: result.length * 3, text: line.trim() });
-                }
-            });
-            return result.sort((a, b) => a.time - b.time);
-        }
-
-        function onYouTubeIframeAPIReady() {
-            // Player will be initialized in startExperience
-        }
-
-        function startExperience() {
-            const url = document.getElementById('yt-link').value;
-            const lrcText = document.getElementById('lrc-input').value;
-            const videoID = extractVideoID(url);
-
-            if (!videoID) {
-                alert('Please enter a valid YouTube link.');
-                return;
-            }
-
-            lyrics = parseLRC(lrcText || "Example Lyric 1\nExample Lyric 2\nEnjoy the vibe!");
-            renderLyrics();
-
-            // Setup UI
-            document.getElementById('setup-panel').classList.add('scale-90', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                document.getElementById('setup-panel').classList.add('hidden');
-                document.getElementById('player-panel').classList.remove('hidden');
-                document.getElementById('player-panel').classList.add('animate-in', 'fade-in', 'zoom-in', 'duration-700');
-            }, 500);
-
-            // Initialize YouTube Player
-            player = new YT.Player('youtube-bg', {
-                videoId: videoID,
-                playerVars: {
-                    autoplay: 1,
-                    controls: 0,
-                    showinfo: 0,
-                    modestbranding: 1,
-                    loop: 1,
-                    playlist: videoID,
-                    mute: 0
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function renderLyrics() {
-            const container = document.getElementById('lyrics-container');
-            container.innerHTML = lyrics.map((l, i) => `
-                <div id="lyric-${i}" class="lyric-line px-4">${l.text}</div>
-            `).join('');
-        }
-
-        function onPlayerReady(event) {
-            const data = event.target.getVideoData();
-            document.getElementById('track-title').innerText = data.title;
-            document.getElementById('track-channel').innerText = data.author;
-            document.getElementById('thumbnail').querySelector('img').src = `https://img.youtube.com/vi/${player.getVideoData().video_id}/maxresdefault.jpg`;
-
-            // Start sync timer
-            timer = setInterval(updateSync, 100);
-        }
-
-        function onPlayerStateChange(event) {
-            const btn = document.getElementById('play-btn');
-            if (event.data == YT.PlayerState.PLAYING) {
-                btn.innerHTML = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        function updateBookingsUI() {
+            if (bookings.length > 0) {
+                bookingsSection.classList.remove('hidden');
+                bookingsList.innerHTML = bookings.map(b => `
+                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-sky-600 flex justify-between items-center transition-all hover:shadow-lg">
+                        <div>
+                            <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-1">${b.status}</p>
+                            <h5 class="text-xl font-bold">${b.destination}</h5>
+                            <p class="text-slate-500 text-sm">Guest: ${b.name} • Date: ${b.date}</p>
+                        </div>
+                        <button onclick="deleteBooking(${b.id})" class="text-red-400 hover:text-red-600 p-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                `).join('');
             } else {
-                btn.innerHTML = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                bookingsSection.classList.add('hidden');
             }
         }
 
-        function togglePlay() {
-            if (player.getPlayerState() == YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
+        function deleteBooking(id) {
+            if (confirm('Cancel this booking?')) {
+                bookings = bookings.filter(b => b.id !== id);
+                localStorage.setItem('wanderlust_bookings', JSON.stringify(bookings));
+                updateBookingsUI();
             }
-        }
-
-        function updateSync() {
-            if (!player || player.getPlayerState() !== YT.PlayerState.PLAYING) return;
-
-            const currentTime = player.getCurrentTime();
-            const duration = player.getDuration();
-
-            // Update Progress Bar
-            const progress = (currentTime / duration) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-
-            // Update Time Text
-            const formatTime = s => new Date(s * 1000).toISOString().substr(14, 5);
-            document.getElementById('playback-time').innerText = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-
-            // Update Lyrics
-            let activeIndex = -1;
-            for (let i = 0; i < lyrics.length; i++) {
-                if (currentTime >= lyrics[i].time) {
-                    activeIndex = i;
-                } else {
-                    break;
-                }
-            }
-
-            if (activeIndex !== currentLyricIndex && activeIndex !== -1) {
-                if (currentLyricIndex !== -1) {
-                    document.getElementById(`lyric-${currentLyricIndex}`).classList.remove('active');
-                }
-                const activeEl = document.getElementById(`lyric-${activeIndex}`);
-                activeEl.classList.add('active');
-                currentLyricIndex = activeIndex;
-
-                // Auto Scroll
-                const container = document.getElementById('lyrics-container');
-                const offset = activeEl.offsetTop - container.offsetHeight / 2 + activeEl.offsetHeight / 2;
-                container.scrollTo({ top: offset, behavior: 'smooth' });
-            }
-        }
-
-        function seek(e) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percentage = x / rect.width;
-            player.seekTo(percentage * player.getDuration());
         }
     </script>
 </body>

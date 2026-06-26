@@ -3,280 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanderlust - Premium Vacation Booking</title>
+    <title>Wanderlust - Immersive Travel Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #0EA5E9;
+            --bg-dark: #020617;
+            --card-dark: rgba(15, 23, 42, 0.8);
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #F8FAFC;
+            background-color: var(--bg-dark);
+            color: #F8FAFC;
+            overflow-x: hidden;
             scroll-behavior: smooth;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
-        .bg-hero {
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
+
+        .float { animation: float 6s ease-in-out infinite; }
+
+        /* Glassmorphism Dark */
+        .glass-dark {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .destination-card:hover img {
-            transform: scale(1.1);
+
+        /* Hero Background with Parallax effect */
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15) 0%, rgba(2, 6, 23, 0) 70%);
         }
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-        }
+
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .destination-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .destination-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(14, 165, 233, 0.25);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mouse Follow Glow */
+        #glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, rgba(14, 165, 233, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
+
+    <div id="glow"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center glass-dark border-b-0 rounded-b-3xl mx-auto">
+        <div class="text-2xl font-bold font-serif tracking-tighter">WANDERLUST</div>
+        <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-400">
+            <a href="#" class="hover:text-sky-400 transition-colors">Destinations</a>
+            <a href="#bookings-section" class="hover:text-sky-400 transition-colors">My Bookings</a>
+            <a href="#" class="hover:text-sky-400 transition-colors">Packages</a>
+        </div>
+        <button class="bg-sky-600 px-6 py-2 rounded-full font-bold text-sm hover:bg-sky-500 transition-all">Book Now</button>
+    </nav>
 
     <!-- Hero Section -->
-    <header class="bg-hero h-[70vh] flex flex-col items-center justify-center text-center text-white px-6">
-        <div class="animate-fade-in-up">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-tight">Your Journey Starts Here</h1>
-            <p class="text-lg md:text-2xl text-slate-200 max-w-3xl mx-auto leading-relaxed">Experience the world's most exotic destinations with our curated premium travel packages.</p>
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="hero-gradient absolute inset-0"></div>
+
+        <div class="relative z-10 text-center px-6">
+            <span class="inline-block text-sky-400 font-bold tracking-[0.3em] uppercase text-sm mb-4 float">Escape the ordinary</span>
+            <h1 class="text-6xl md:text-8xl font-serif font-bold mb-8 leading-tight">Beyond the<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-500">Horizon</span></h1>
+            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">Luxury travel experiences curated for the world's most discerning explorers. Discover hidden paradises in Indonesia.</p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#destinations" class="bg-white text-slate-900 px-10 py-4 rounded-2xl font-bold hover:bg-sky-400 hover:text-white transition-all shadow-xl">Explore Destinations</a>
+                <a href="#booking-form" class="glass-dark px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all">Quick Booking</a>
+            </div>
         </div>
+
+        <!-- Decorative Elements -->
+        <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] float"></div>
+        <div class="absolute top-40 -right-20 w-80 h-80 bg-sky-500/10 rounded-full blur-[100px] float" style="animation-delay: 2s"></div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 -mt-24 relative z-10 pb-20">
+    <main class="relative z-10 px-6 max-w-7xl mx-auto pb-40">
 
-        <!-- Booking Form Card -->
-        <section class="glass-card p-10 rounded-[2.5rem] shadow-2xl mb-16">
-            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
-                <div class="p-2 bg-sky-100 rounded-lg">
-                    <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <!-- Booking Form Section -->
+        <section id="booking-form" class="reveal glass-dark p-12 rounded-[3rem] mb-32 -mt-32 shadow-2xl">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 items-end">
+                <div class="lg:col-span-1">
+                    <h2 class="text-2xl font-bold mb-2">Book Your Trip</h2>
+                    <p class="text-slate-500 text-sm">Fill in your details to reserve.</p>
                 </div>
-                Reserve Your Adventure
-            </h2>
-            <form id="booking-form" class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Explorer Name</label>
-                    <input type="text" id="name" required placeholder="Full Name" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50">
+                <div class="space-y-3">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Explorer Name</label>
+                    <input type="text" id="name" placeholder="John Doe" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-all text-white">
                 </div>
-                <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Destination</label>
-                    <select id="destination" class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50 cursor-pointer">
+                <div class="space-y-3">
+                    <label class="text-xs font-bold text-slate-500 uppercase">Destination</label>
+                    <select id="destination" class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-all text-white appearance-none cursor-pointer">
                         <option value="Bali">Bali, Indonesia</option>
                         <option value="Raja Ampat">Raja Ampat, Papua</option>
                         <option value="Labuan Bajo">Labuan Bajo, NTT</option>
                         <option value="Mount Bromo">Mount Bromo, East Java</option>
                     </select>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1">Travel Date</label>
-                    <input type="date" id="date" required class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all bg-white/50">
-                </div>
-                <div class="flex items-end">
-                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 px-6 rounded-2xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-sky-200">
-                        Confirm Booking
-                    </button>
-                </div>
-            </form>
+                <button onclick="handleBooking()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-sky-900/40 transition-all active:scale-95">
+                    Confirm Reservation
+                </button>
+            </div>
         </section>
 
-        <!-- Destinasi Section -->
-        <section class="mb-20">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h3 class="text-4xl font-bold mb-2">Popular Destinations</h3>
-                    <p class="text-slate-500">Hand-picked locations for your ultimate relaxation.</p>
+        <!-- Destinations Section -->
+        <section id="destinations" class="mb-32">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div class="reveal">
+                    <h3 class="text-5xl font-serif font-bold mb-4">Top Destinations</h3>
+                    <p class="text-slate-400 max-w-md">Our hand-picked selections of the most breathtaking locations in Indonesia.</p>
+                </div>
+                <div class="flex gap-4 reveal" style="transition-delay: 200ms">
+                    <button class="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center hover:bg-sky-600 hover:border-sky-600 transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                    <button class="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center hover:bg-sky-600 hover:border-sky-600 transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
                 </div>
             </div>
 
-            <div id="destinations-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Destinasi akan di-generate oleh JS -->
+            <div id="dest-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Injected via JS -->
             </div>
         </section>
 
         <!-- My Bookings Section -->
-        <section id="bookings-section" class="hidden animate-fade-in">
-            <h3 class="text-3xl font-bold mb-8">My Itinerary</h3>
-            <div id="bookings-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Bookings will be injected here -->
+        <section id="bookings-section" class="reveal hidden">
+            <div class="flex items-center gap-6 mb-12">
+                <h3 class="text-4xl font-serif font-bold">My Itinerary</h3>
+                <div class="h-[1px] flex-1 bg-slate-800"></div>
+            </div>
+            <div id="bookings-list" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Injected via JS -->
             </div>
         </section>
 
     </main>
 
-    <!-- Destination Detail Modal -->
-    <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10">
-        <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
-        <div class="glass-card w-full max-w-5xl max-h-[90vh] rounded-[3rem] overflow-hidden relative flex flex-col md:flex-row shadow-2xl animate-zoom-in">
-            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 bg-white/20 hover:bg-white/40 p-3 rounded-full text-white backdrop-blur-md transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+    <!-- Detail Modal -->
+    <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl" onclick="closeModal()"></div>
+        <div class="relative glass-dark w-full max-w-6xl max-h-[90vh] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-2xl border-white/5">
+            <button onclick="closeModal()" class="absolute top-8 right-8 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
 
-            <!-- Modal Left: Big Image -->
-            <div class="flex-1 h-64 md:h-auto overflow-hidden">
-                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+            <div class="lg:w-1/2 h-80 lg:h-auto overflow-hidden">
+                <img id="m-img" src="" class="w-full h-full object-cover">
             </div>
+            <div class="lg:w-1/2 p-12 lg:p-20 overflow-y-auto">
+                <span id="m-tag" class="text-sky-400 font-bold tracking-widest uppercase text-xs mb-4 block">Adventure</span>
+                <h4 id="m-title" class="text-5xl font-serif font-bold mb-6">Bali</h4>
+                <p id="m-desc" class="text-slate-400 text-lg leading-relaxed mb-10">Description</p>
 
-            <!-- Modal Right: Info -->
-            <div class="flex-1 p-10 md:p-16 overflow-y-auto bg-white/90 backdrop-blur-md">
-                <h4 id="modal-title" class="text-4xl font-bold mb-4">Destination Title</h4>
-                <div class="flex items-center gap-2 mb-6">
-                    <span id="modal-tag" class="bg-sky-100 text-sky-700 px-4 py-1 rounded-full text-sm font-bold">Nature</span>
-                    <span id="modal-price" class="text-slate-400 font-bold">$0 / Person</span>
+                <div class="grid grid-cols-2 gap-10 mb-12">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Pricing</p>
+                        <p id="m-price" class="text-3xl font-bold text-white">$499</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-2">Duration</p>
+                        <p class="text-3xl font-bold text-white">5 Days</p>
+                    </div>
                 </div>
-                <p id="modal-desc" class="text-slate-600 leading-relaxed text-lg mb-8">Description goes here...</p>
 
-                <div class="space-y-6">
-                    <h5 class="font-bold text-xl">What's Included:</h5>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 text-slate-600">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Luxury Resort Accommodation
-                        </li>
-                        <li class="flex items-center gap-3 text-slate-600">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Private Guided Tour
-                        </li>
-                    </ul>
-                    <button onclick="closeModal(); document.getElementById('name').focus();" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-black transition-all">
-                        Book This Destination
-                    </button>
-                </div>
+                <button onclick="closeModal(); document.getElementById('booking-form').scrollIntoView();" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-5 rounded-2xl transition-all shadow-xl shadow-sky-600/20">Book This Adventure</button>
             </div>
         </div>
     </div>
 
     <script>
         const destinations = [
-            {
-                id: 1,
-                name: "Bali, Indonesia",
-                tag: "Cultural Paradise",
-                price: 499,
-                img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                desc: "Known as the Island of the Gods, Bali offers a rich cultural heritage, vibrant ceremonies, and stunning natural beauty. From lush jungles in Ubud to world-class surfing in Uluwatu, it's a destination that caters to every type of traveler."
-            },
-            {
-                id: 2,
-                name: "Raja Ampat, Papua",
-                tag: "Underwater Eden",
-                price: 899,
-                img: "https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                desc: "Raja Ampat is a pristine archipelago in West Papua, famous for being the global epicentre of marine biodiversity. Crystal-clear waters, limestone karsts, and secret lagoons await those looking for the ultimate off-the-grid experience."
-            },
-            {
-                id: 3,
-                name: "Labuan Bajo, NTT",
-                tag: "Prehistoric Adventure",
-                price: 650,
-                img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                desc: "Home to the legendary Komodo Dragon, Labuan Bajo is the gateway to the Komodo National Park. Hike up Padar Island for an iconic three-colored beach view or swim with Manta Rays in Manta Point."
-            },
-            {
-                id: 4,
-                name: "Mount Bromo, East Java",
-                tag: "Volcanic Wonder",
-                price: 320,
-                img: "https://images.unsplash.com/photo-1602154663343-89fe0496150b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
-                desc: "Witness one of the most spectacular sunrises in the world over the Bromo-Tengger-Semeru National Park. The surreal landscapes of the Sea of Sand and the active crater of Mount Bromo will leave you breathless."
-            }
+            { id: 1, name: "Bali, Indonesia", tag: "Island Retreat", price: 499, img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80", desc: "Experience the ultimate balance of spirituality and luxury. Bali offers ancient temples, lush rice fields, and world-class surfing." },
+            { id: 2, name: "Raja Ampat, Papua", tag: "Marine Paradise", price: 899, img: "https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?auto=format&fit=crop&w=800&q=80", desc: "A journey to the edge of the world. Raja Ampat holds the world's highest marine biodiversity in a pristine, untouched archipelago." },
+            { id: 3, name: "Labuan Bajo, NTT", tag: "Dragon's Den", price: 650, img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80", desc: "Sail across crystal blue waters to encounter the legendary Komodo dragons and hike the iconic Padar Island sunset." },
+            { id: 4, name: "Mount Bromo, East Java", tag: "Volcanic View", price: 320, img: "https://images.unsplash.com/photo-1602154663343-89fe0496150b?auto=format&fit=crop&w=800&q=80", desc: "Witness a sunrise like no other from the rim of an active volcano. A surreal landscape of sand seas and mountain peaks." }
         ];
 
-        const bookingForm = document.getElementById('booking-form');
-        const bookingsSection = document.getElementById('bookings-section');
-        const bookingsList = document.getElementById('bookings-list');
-        const destinationsGrid = document.getElementById('destinations-grid');
+        // Glow Follow Mouse
+        const glow = document.getElementById('glow');
+        window.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
 
-        // Render Destinations
-        destinationsGrid.innerHTML = destinations.map(d => `
-            <div class="destination-card group bg-white rounded-[2.5rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openDetail(${d.id})">
-                <div class="h-72 overflow-hidden relative">
-                    <img src="${d.img}" alt="${d.name}" class="w-full h-full object-cover transition-transform duration-700">
-                    <div class="absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-1 rounded-full text-sm font-bold shadow-sm">
-                        $${d.price}
+        // Scroll Reveal
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, observerOptions);
+
+        function init() {
+            const grid = document.getElementById('dest-grid');
+            grid.innerHTML = destinations.map((d, i) => `
+                <div class="reveal destination-card glass-dark rounded-[2.5rem] overflow-hidden group cursor-pointer" onclick="openModal(${d.id})" style="transition-delay: ${i * 100}ms">
+                    <div class="h-[400px] overflow-hidden relative">
+                        <img src="${d.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-10 left-10">
+                            <span class="text-sky-400 font-bold uppercase text-[10px] tracking-widest mb-2 block">${d.tag}</span>
+                            <h4 class="text-2xl font-bold">${d.name}</h4>
+                        </div>
+                        <div class="absolute top-8 right-8 bg-white/10 backdrop-blur-md px-5 py-2 rounded-full font-bold text-sm">$${d.price}</div>
                     </div>
                 </div>
-                <div class="p-8">
-                    <div class="text-sky-600 text-xs font-bold uppercase tracking-widest mb-2">${d.tag}</div>
-                    <h4 class="text-2xl font-bold mb-3">${d.name}</h4>
-                    <p class="text-slate-500 text-sm mb-6 line-clamp-2">${d.desc}</p>
-                    <div class="flex items-center text-slate-900 font-bold group-hover:gap-2 transition-all">
-                        View Details
-                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+            `).join('');
 
-        // Modal Logic
-        function openDetail(id) {
-            const dest = destinations.find(d => d.id === id);
-            document.getElementById('modal-title').innerText = dest.name;
-            document.getElementById('modal-tag').innerText = dest.tag;
-            document.getElementById('modal-price').innerText = `$${dest.price} / Person`;
-            document.getElementById('modal-desc').innerText = dest.desc;
-            document.getElementById('modal-img').src = dest.img;
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            updateBookings();
+        }
 
-            document.getElementById('detail-modal').classList.remove('hidden');
+        function openModal(id) {
+            const d = destinations.find(x => x.id === id);
+            document.getElementById('m-title').innerText = d.name;
+            document.getElementById('m-tag').innerText = d.tag;
+            document.getElementById('m-price').innerText = `$${d.price}`;
+            document.getElementById('m-desc').innerText = d.desc;
+            document.getElementById('m-img').src = d.img;
+            document.getElementById('modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            document.getElementById('detail-modal').classList.add('hidden');
+            document.getElementById('modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
 
-        // Booking Logic
-        let bookings = JSON.parse(localStorage.getItem('wanderlust_bookings')) || [];
-        updateBookingsUI();
+        function handleBooking() {
+            const name = document.getElementById('name').value;
+            const dest = document.getElementById('destination').value;
+            if(!name) return alert('Enter your name!');
 
-        bookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newBooking = {
-                id: Date.now(),
-                name: document.getElementById('name').value,
-                destination: document.getElementById('destination').value,
-                date: document.getElementById('date').value,
-                status: 'Confirmed'
-            };
-            bookings.unshift(newBooking);
-            localStorage.setItem('wanderlust_bookings', JSON.stringify(bookings));
-            bookingForm.reset();
-            updateBookingsUI();
-            bookingsSection.scrollIntoView({ behavior: 'smooth' });
-        });
+            const bookings = JSON.parse(localStorage.getItem('wander_b') || '[]');
+            bookings.unshift({ id: Date.now(), name, dest, date: new Date().toLocaleDateString() });
+            localStorage.setItem('wander_b', JSON.stringify(bookings));
 
-        function updateBookingsUI() {
-            if (bookings.length > 0) {
-                bookingsSection.classList.remove('hidden');
-                bookingsList.innerHTML = bookings.map(b => `
-                    <div class="bg-white p-8 rounded-[2rem] shadow-lg border-l-8 border-sky-600 flex justify-between items-center transition-all hover:-translate-y-1">
+            document.getElementById('name').value = '';
+            updateBookings();
+            document.getElementById('bookings-section').scrollIntoView();
+        }
+
+        function updateBookings() {
+            const list = document.getElementById('bookings-list');
+            const data = JSON.parse(localStorage.getItem('wander_b') || '[]');
+
+            if(data.length > 0) {
+                document.getElementById('bookings-section').classList.remove('hidden');
+                list.innerHTML = data.map(b => `
+                    <div class="glass-dark p-8 rounded-[2rem] flex justify-between items-center group hover:border-sky-500/30 transition-all">
                         <div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">${b.status}</p>
-                            </div>
-                            <h5 class="text-2xl font-bold mb-1">${b.destination}</h5>
-                            <p class="text-slate-500 font-medium">Guest: <span class="text-slate-900">${b.name}</span> • <span class="text-sky-600">${b.date}</span></p>
+                            <p class="text-[10px] font-bold text-sky-400 uppercase tracking-widest mb-2">Confirmed</p>
+                            <h5 class="text-2xl font-bold mb-1">${b.dest}</h5>
+                            <p class="text-slate-500 text-sm">Guest: <span class="text-slate-200">${b.name}</span> • ${b.date}</p>
                         </div>
-                        <button onclick="deleteBooking(${b.id})" class="text-slate-300 hover:text-red-500 transition-colors p-3">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
+                        <button onclick="deleteB(${b.id})" class="text-slate-600 hover:text-red-500 transition-colors p-4"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
                     </div>
                 `).join('');
-            } else {
-                bookingsSection.classList.add('hidden');
             }
         }
 
-        function deleteBooking(id) {
-            if (confirm('Cancel this booking?')) {
-                bookings = bookings.filter(b => b.id !== id);
-                localStorage.setItem('wanderlust_bookings', JSON.stringify(bookings));
-                updateBookingsUI();
-            }
+        function deleteB(id) {
+            let data = JSON.parse(localStorage.getItem('wander_b') || '[]');
+            data = data.filter(x => x.id !== id);
+            localStorage.setItem('wander_b', JSON.stringify(data));
+            updateBookings();
         }
+
+        init();
     </script>
 </body>
 </html>

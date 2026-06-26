@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wanderlust - Immersive Travel Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,7 +23,6 @@
 
         .font-serif { font-family: 'Playfair Display', serif; }
 
-        /* Floating Animation */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
@@ -33,19 +31,16 @@
 
         .float { animation: float 6s ease-in-out infinite; }
 
-        /* Glassmorphism Dark */
         .glass-dark {
             background: rgba(30, 41, 59, 0.5);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Hero Background with Parallax effect */
         .hero-gradient {
             background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15) 0%, rgba(2, 6, 23, 0) 70%);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
@@ -70,7 +65,6 @@
             transform: translateY(0);
         }
 
-        /* Mouse Follow Glow */
         #glow {
             position: fixed;
             width: 600px;
@@ -80,7 +74,6 @@
             pointer-events: none;
             z-index: 0;
             transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
         }
     </style>
 </head>
@@ -88,8 +81,7 @@
 
     <div id="glow"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center glass-dark border-b-0 rounded-b-3xl mx-auto">
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center glass-dark border-b-0 rounded-b-3xl">
         <div class="text-2xl font-bold font-serif tracking-tighter">WANDERLUST</div>
         <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-400">
             <a href="#" class="hover:text-sky-400 transition-colors">Destinations</a>
@@ -99,29 +91,21 @@
         <button class="bg-sky-600 px-6 py-2 rounded-full font-bold text-sm hover:bg-sky-500 transition-all">Book Now</button>
     </nav>
 
-    <!-- Hero Section -->
     <header class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div class="hero-gradient absolute inset-0"></div>
-
         <div class="relative z-10 text-center px-6">
             <span class="inline-block text-sky-400 font-bold tracking-[0.3em] uppercase text-sm mb-4 float">Escape the ordinary</span>
             <h1 class="text-6xl md:text-8xl font-serif font-bold mb-8 leading-tight">Beyond the<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-500">Horizon</span></h1>
             <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">Luxury travel experiences curated for the world's most discerning explorers. Discover hidden paradises in Indonesia.</p>
-
             <div class="flex flex-col md:flex-row gap-4 justify-center">
                 <a href="#destinations" class="bg-white text-slate-900 px-10 py-4 rounded-2xl font-bold hover:bg-sky-400 hover:text-white transition-all shadow-xl">Explore Destinations</a>
                 <a href="#booking-form" class="glass-dark px-10 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all">Quick Booking</a>
             </div>
         </div>
-
-        <!-- Decorative Elements -->
-        <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] float"></div>
-        <div class="absolute top-40 -right-20 w-80 h-80 bg-sky-500/10 rounded-full blur-[100px] float" style="animation-delay: 2s"></div>
     </header>
 
     <main class="relative z-10 px-6 max-w-7xl mx-auto pb-40">
 
-        <!-- Booking Form Section -->
         <section id="booking-form" class="reveal glass-dark p-12 rounded-[3rem] mb-32 -mt-32 shadow-2xl">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 items-end">
                 <div class="lg:col-span-1">
@@ -147,25 +131,18 @@
             </div>
         </section>
 
-        <!-- Destinations Section -->
         <section id="destinations" class="mb-32">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                 <div class="reveal">
                     <h3 class="text-5xl font-serif font-bold mb-4">Top Destinations</h3>
                     <p class="text-slate-400 max-w-md">Our hand-picked selections of the most breathtaking locations in Indonesia.</p>
                 </div>
-                <div class="flex gap-4 reveal" style="transition-delay: 200ms">
-                    <button class="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center hover:bg-sky-600 hover:border-sky-600 transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
-                    <button class="w-14 h-14 rounded-full border border-slate-700 flex items-center justify-center hover:bg-sky-600 hover:border-sky-600 transition-all"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
-                </div>
             </div>
-
             <div id="dest-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Injected via JS -->
             </div>
         </section>
 
-        <!-- My Bookings Section -->
         <section id="bookings-section" class="reveal hidden">
             <div class="flex items-center gap-6 mb-12">
                 <h3 class="text-4xl font-serif font-bold">My Itinerary</h3>
@@ -178,20 +155,17 @@
 
     </main>
 
-    <!-- Detail Modal -->
     <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl" onclick="closeModal()"></div>
         <div class="relative glass-dark w-full max-w-6xl max-h-[90vh] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-2xl border-white/5">
             <button onclick="closeModal()" class="absolute top-8 right-8 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-
             <div class="lg:w-1/2 h-80 lg:h-auto overflow-hidden">
-                <img id="m-img" src="" class="w-full h-full object-cover">
+                <img id="m-img" src="" alt="Destination image" class="w-full h-full object-cover">
             </div>
             <div class="lg:w-1/2 p-12 lg:p-20 overflow-y-auto">
                 <span id="m-tag" class="text-sky-400 font-bold tracking-widest uppercase text-xs mb-4 block">Adventure</span>
                 <h4 id="m-title" class="text-5xl font-serif font-bold mb-6">Bali</h4>
                 <p id="m-desc" class="text-slate-400 text-lg leading-relaxed mb-10">Description</p>
-
                 <div class="grid grid-cols-2 gap-10 mb-12">
                     <div>
                         <p class="text-xs font-bold text-slate-500 uppercase mb-2">Pricing</p>
@@ -202,28 +176,26 @@
                         <p class="text-3xl font-bold text-white">5 Days</p>
                     </div>
                 </div>
-
                 <button onclick="closeModal(); document.getElementById('booking-form').scrollIntoView();" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-5 rounded-2xl transition-all shadow-xl shadow-sky-600/20">Book This Adventure</button>
             </div>
         </div>
     </div>
 
     <script>
+        // High-reliability image URLs from Unsplash
         const destinations = [
-            { id: 1, name: "Bali, Indonesia", tag: "Island Retreat", price: 499, img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80", desc: "Experience the ultimate balance of spirituality and luxury. Bali offers ancient temples, lush rice fields, and world-class surfing." },
-            { id: 2, name: "Raja Ampat, Papua", tag: "Marine Paradise", price: 899, img: "https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?auto=format&fit=crop&w=800&q=80", desc: "A journey to the edge of the world. Raja Ampat holds the world's highest marine biodiversity in a pristine, untouched archipelago." },
-            { id: 3, name: "Labuan Bajo, NTT", tag: "Dragon's Den", price: 650, img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=800&q=80", desc: "Sail across crystal blue waters to encounter the legendary Komodo dragons and hike the iconic Padar Island sunset." },
-            { id: 4, name: "Mount Bromo, East Java", tag: "Volcanic View", price: 320, img: "https://images.unsplash.com/photo-1602154663343-89fe0496150b?auto=format&fit=crop&w=800&q=80", desc: "Witness a sunrise like no other from the rim of an active volcano. A surreal landscape of sand seas and mountain peaks." }
+            { id: 1, name: "Bali, Indonesia", tag: "Island Retreat", price: 499, img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1000&auto=format&fit=crop", desc: "Experience the ultimate balance of spirituality and luxury. Bali offers ancient temples, lush rice fields, and world-class surfing." },
+            { id: 2, name: "Raja Ampat, Papua", tag: "Marine Paradise", price: 899, img: "https://images.unsplash.com/photo-1516690561799-46d8f74f90f6?q=80&w=1000&auto=format&fit=crop", desc: "A journey to the edge of the world. Raja Ampat holds the world's highest marine biodiversity in a pristine, untouched archipelago." },
+            { id: 3, name: "Labuan Bajo, NTT", tag: "Dragon's Den", price: 650, img: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=80&w=1000&auto=format&fit=crop", desc: "Sail across crystal blue waters to encounter the legendary Komodo dragons and hike the iconic Padar Island sunset." },
+            { id: 4, name: "Mount Bromo, East Java", tag: "Volcanic View", price: 320, img: "https://images.unsplash.com/photo-1602154663343-89fe0496150b?q=80&w=1000&auto=format&fit=crop", desc: "Witness a sunrise like no other from the rim of an active volcano. A surreal landscape of sand seas and mountain peaks." }
         ];
 
-        // Glow Follow Mouse
         const glow = document.getElementById('glow');
         window.addEventListener('mousemove', (e) => {
             glow.style.left = e.clientX + 'px';
             glow.style.top = e.clientY + 'px';
         });
 
-        // Scroll Reveal
         const observerOptions = { threshold: 0.1 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -236,7 +208,7 @@
             grid.innerHTML = destinations.map((d, i) => `
                 <div class="reveal destination-card glass-dark rounded-[2.5rem] overflow-hidden group cursor-pointer" onclick="openModal(${d.id})" style="transition-delay: ${i * 100}ms">
                     <div class="h-[400px] overflow-hidden relative">
-                        <img src="${d.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <img src="${d.img}" alt="${d.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
                         <div class="absolute bottom-10 left-10">
                             <span class="text-sky-400 font-bold uppercase text-[10px] tracking-widest mb-2 block">${d.tag}</span>
